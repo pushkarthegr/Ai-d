@@ -4,6 +4,7 @@ rightX = 0;
 rightY = 0;
 leftX = 0;
 leftY = 0;
+leftConfidence = 0;
 function preload(){
     sound = loadSound("music.mp3");
 }
@@ -25,6 +26,9 @@ function getValue(result){
         rightY = result[0].pose.rightWrist.y;
         leftX = result[0].pose.leftWrist.x;
         leftY = result[0].pose.leftWrist.y;
+
+        leftConfidence = result[0].pose.leftWrist.confidence;
+        console.log("The confidence is - "+leftConfidence);
     }
 }
 function loaded(){
@@ -35,7 +39,17 @@ function draw(){
     fill("red");
     stroke("black");
     circle(rightX,rightY,20);
-    circle(leftX,leftY,20);
+
+    if(leftConfidence>0.2){
+        circle(leftX,leftY,20);
+
+        getY = Number(leftY);
+        round = Math.round(getY);
+        volume = round/350;
+
+        document.getElementById("volume_h3").innerHTML = "Volume = "+volume;
+        sound.setVolume(volume);
+    }
 }
 function play(){
     if(check == 0){
